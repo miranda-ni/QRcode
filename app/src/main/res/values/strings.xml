@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">QRcode</string>
+    <string name="start_qr">start Qr</string>
+    <string name="user_login" />
+    <string name="user_password" />
+</resources>
