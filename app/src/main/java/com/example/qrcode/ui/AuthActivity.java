@@ -4,11 +4,14 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.qrcode.MainActivity;
@@ -16,8 +19,12 @@ import com.example.qrcode.R;
 import com.example.qrcode.data.local.PrefUtils;
 import com.example.qrcode.data.models.AuthModels;
 import com.example.qrcode.data.network.AuthClient;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+import com.google.zxing.qrcode.QRCodeWriter;
 
 import okhttp3.Credentials;
 import retrofit2.Call;
@@ -29,6 +36,7 @@ public class AuthActivity extends AppCompatActivity {
 
     private EditText userLogin,userPassword;
     private Button singIn,generate;
+    private ImageView imageView;
     private String id;
 
     @Override
@@ -44,6 +52,7 @@ public class AuthActivity extends AppCompatActivity {
         userPassword = findViewById(R.id.auth_password_et_qr);
         singIn = findViewById(R.id.sing_in_qr);
         generate = findViewById(R.id.generate_gr);
+        imageView = findViewById(R.id.image_view_qr);
 
         singIn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,22 +92,49 @@ public class AuthActivity extends AppCompatActivity {
     }
 
     private void signIn(){
+
         generate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                QRCodeWriter writer = new QRCodeWriter();
                 String login = userLogin.getText().toString();
                 String password = userPassword.getText().toString();
-                String id = Credentials.basic(login,password);
+                String account = login + password;
+                BitMatrix bitMatrix;
+                try {
+                    if (!account.isEmpty()) {
+                        bitMatrix = writer.encode(account, BarcodeFormat.QR_CODE, 300, 300);
+                    } else {
+                        bitMatrix = writer.encode("Error", BarcodeFormat.QR_CODE, 300, 300);
+                    }
+                    Bitmap bitmap = Bitmap.createBitmap(300, 300, Bitmap.Config.RGB_565);
+                    for (int x = 0; x < 300; x++) {
+                        for (int y = 0; y < 300; y++) {
+                            int color;
+                            if (bitMatrix.get(x, y)) {
+                                color = Color.BLACK;
+                            } else {
+                                color = Color.WHITE;
+                            }
+                            bitmap.setPixel(x, y, color);
+                            imageView.setImageBitmap(bitmap);
+                        }
+                    }
+                } catch (WriterException e) {
+                    e.printStackTrace();
+                }
 
-                Intent intent = new Intent(Intent.ACTION_SEND);
-                intent.setType("text/plain");
-                intent.putExtra(Intent.EXTRA_TEXT,id);
-                startActivity(Intent.createChooser(intent,"use qr code generator"));
+
+//
+//                Intent intent = new Intent(Intent.ACTION_SEND);
+//                intent.setType("text/plain");
+//                intent.putExtra(Intent.EXTRA_TEXT, id);
+//                startActivity(Intent.createChooser(intent, "use qr code generator"));
             }
-
 
         });
     }
+
 
     @Override
     public void onBackPressed() {

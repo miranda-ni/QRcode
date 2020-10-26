@@ -12,7 +12,7 @@
         android:layout_width="325dp"
         android:layout_height="20dp"
         android:layout_marginStart="16sp"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="20dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:text="USER LOGIN"
@@ -56,10 +56,20 @@
         android:textColor="#FFFFFF"
         android:background="@drawable/neww"/>
 
+
+    <ImageView
+        android:id="@+id/image_view_qr"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="12dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/auth_password_et_qr" />
+
     <Button
         android:id="@+id/generate_gr"
         android:layout_width="327dp"
-        android:layout_height="56dp"
+        android:layout_height="40dp"
         android:layout_marginStart="18sp"
         android:layout_marginBottom="10dp"
         app:layout_constraintBottom_toTopOf="@id/sing_in_qr"
@@ -74,7 +84,7 @@
     <Button
         android:id="@+id/sing_in_qr"
         android:layout_width="327dp"
-        android:layout_height="56dp"
+        android:layout_height="40dp"
         android:layout_marginStart="18sp"
         android:layout_marginBottom="40dp"
         app:layout_constraintBottom_toBottomOf="parent"
